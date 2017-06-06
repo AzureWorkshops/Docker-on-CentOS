@@ -7,8 +7,6 @@ If you've been provided with a voucher, formally known as an Azure Pass, then yo
 ## Trial Subscription
 Direct your browser to [https://azure.microsoft.com/en-us/free/](https://azure.microsoft.com/en-us/free/) and begin by clicking on the green button that reads **Start free**.
 
-**IMPORTANT:** On the sign-up form page, you should see your new email address that associated with your new Office 365 account.  If not, click on **Sign Out** and re-authenticate using your newly formed credentials (e.g. username@_yourcompany_.onmicrosoft.com).
-
   1. In the first section, complete the form in its entirety. Make sure you use your _real_ email address for the important notifications.
 
   2. In the second section, enter a _real_ mobile phone number to receive a text verification number.  Click send message and re-type the received code.
