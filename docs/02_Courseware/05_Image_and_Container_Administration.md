@@ -23,7 +23,6 @@ We've just created a new directory with a test text file in the user's home dire
 ```bash
 CONTAINER ID        IMAGE               COMMAND                  CREATED             STATUS                          PORTS               NAMES
 493be7443224        centos              "/bin/bash"              33 seconds ago      Exited (0) 7 seconds ago                            elastic_golick
-997f2f96a9dc        centos              "/bin/bash"              5 minutes ago       Exited (0) 5 minutes ago                            stupefied_curran
 521376937c77        docker/whalesay     "cowsay 'Azure Roc..."   6 minutes ago       Exited (0) About a minute ago                       frosty_kilby
 571f6e48e14c        hello-world         "/hello"                 8 minutes ago       Exited (0) 8 minutes ago                            pensive_rosalind
 ```
