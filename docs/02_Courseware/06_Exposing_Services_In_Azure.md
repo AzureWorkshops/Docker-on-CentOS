@@ -2,7 +2,7 @@
 The final part of this workshop is to practice exposing a container service outside of Azure. We're going to create a simple web server and access it from our local machine.
 
 ## NGINX
-We are going to deploying a container hosting NGINX (pronounced "engine X"), a simple, but powerful web server. NGINX is typically used in containerized deployments because it supports autoscaling, service discovery and other capabilities often leveraged in microservice architecture.
+We are going to deploy a container hosting NGINX (pronounced "engine X"), a simple, but powerful web server. NGINX is typically used in containerized deployments because it supports autoscaling, service discovery and other capabilities often leveraged in microservice architecture.
 
 Run NGINX by typing the following command:
 ```bash
