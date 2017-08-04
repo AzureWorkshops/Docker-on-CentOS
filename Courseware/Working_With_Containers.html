@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <title>Working With Containers - Docker on CentOS</title>
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+
+    <meta name="description" content="Azure Workshops" />
+    <meta name="author" content="Joshua Davis">
+    <link rel="icon" href="" type="image/x-icon">
+    
+    <!-- Font -->
+    
+    <!-- CSS -->
+    <link href='../themes/azure/css/vs.css' rel='stylesheet' type='text/css'><link href='../themes/azure/css/theme.css' rel='stylesheet' type='text/css'><link href='../themes/azure/css/theme-white.min.css' rel='stylesheet' type='text/css'>
+</head>
+<body class="">
+
+        <nav class="navbar navbar-inverse">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-md-2 col-md-offset-1">
+                    <div class="navbar-header">
+                        <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+                            <span class="sr-only">Toggle navigation</span>
+                            <span class="icon-bar"></span>
+                            <span class="icon-bar"></span>
+                            <span class="icon-bar"></span>
+                        </button>
+                        <a class="navbar-brand" href="/">Azure Workshops</a>
+                    </div>
+                </div>
+
+                <div class="col-md-8">
+                    <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                        <ul class="nav navbar-nav navbar-right">
+                            <!--
+                            <li><a href="about.html">About</a></li>
+                            <li><a href="contact.html">Contact</a></li>
+                            -->
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+<div id="content-wrapper" class="container-fluid">
+    <div class="row hidden-print">
+        <div class="col-md-10 col-md-offset-1 breadcrumbs">
+            <a href="../index.html">Docker on CentOS</a> / <a href="../Courseware/Exploring_Azure.html">Courseware</a> / <a href="../Courseware/Working_With_Containers.html">Working With Containers</a>        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-2 col-md-offset-1 hidden-print">
+            <div data-spy="affix" data-offset-top="100">
+                <!-- Navigation -->
+                <ul class='Nav'><li class='Nav__item '><a href="../Overview.html">Overview</a></li><li class='Nav__item  has-children'><a href="#" class="aj-nav folder"><i class="Nav__arrow">&nbsp;</i>Getting Started</a><ul class='Nav'><li class='Nav__item '><a href="../Getting_Started/Requirements.html">Requirements</a></li><li class='Nav__item '><a href="../Getting_Started/Azure_Registration.html">Azure Registration</a></li></ul></li><li class='Nav__item Nav__item--open has-children'><a href="#" class="aj-nav folder"><i class="Nav__arrow">&nbsp;</i>Courseware</a><ul class='Nav'><li class='Nav__item '><a href="../Courseware/Exploring_Azure.html">Exploring Azure</a></li><li class='Nav__item '><a href="../Courseware/Create_a_Virtual_Machine.html">Create a Virtual Machine</a></li><li class='Nav__item '><a href="../Courseware/Install_Docker.html">Install Docker</a></li><li class='Nav__item '><a href="../Courseware/Hello_World.html">Hello World</a></li><li class='Nav__item Nav__item--active'><a href="../Courseware/Working_With_Containers.html">Working With Containers</a></li><li class='Nav__item '><a href="../Courseware/Image_and_Container_Administration.html">Image and Container Administration</a></li><li class='Nav__item '><a href="../Courseware/Exposing_Services_In_Azure.html">Exposing Services In Azure</a></li></ul></li></ul>
+                <div class="Links">
+                    
+                    <div class="pdf-link">
+                        <hr />
+                        <a href="../pdf/Docker on CentOS.pdf"><i class="fa fa-file-pdf-o" aria-hidden="true"></i> <span>Download PDF</span></a>
+                    </div>
+
+                                            <hr/>
+                        <div class="Twitter">
+                                                            <iframe allowtransparency="true" frameborder="0" scrolling="no" style="width:162px; height:20px;" src="https://platform.twitter.com/widgets/follow_button.html?screen_name=azureworkshops&amp;show_count=false"></iframe>
+                                <br />
+                                <br />
+                                                    </div>
+                                    </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <article class="Page">
+    <div class="pageHeader">
+        <h1>Working With Containers</h1>
+                    <div class="date"> Friday, August 4, 2017 2:16 PM</div>
+            </div>
+    <div class="copy">
+        <h2 id="page_Overview">Overview</h2>
+<p>We've successfully deployed a couple of containers into our Docker engine.  In this section, we'll dig a little deeper into working with and interacting with containers.</p>
+<h2 id="page_Listing-Images">Listing Images</h2>
+<p>As we experienced with running the <em>Whalesay</em> container multiple times, the actual image was only downloaded, uncompressed and built once.  On all subsequent executions, a new container was simply instantiated based on the image.  Docker keeps a local repository of images currently in use; and, those images cannot be deleted until all dependent containers have been deleted.</p>
+<p>To view a list of currently downloaded images, type the following in the command prompt:</p>
+<pre><code class="language-bash">docker images
+</code></pre>
+<p>The output should look similar to the following:</p>
+<pre><code class="language-bash">REPOSITORY          TAG                 IMAGE ID            CREATED             SIZE
+hello-world         latest              48b5124b2768        4 months ago        1.84kB
+docker/whalesay     latest              6b362a9f73eb        2 years ago         247MB
+</code></pre>
+<p>There's a few things that are reported to us here.</p>
+<p>First, we see the repository, including the namespace, of the image.  The <code>hello-world</code> is what we would consider a <em>library</em> image.  In other words, it's an image that, for lack of a better way to describe it, is 'built-in' to Docker.  For <code>whalesay</code>, we see that the repository is <code>docker</code>.  We'll talk more about repositories below.</p>
+<p>The second column shows us the current tag of the image.  We look at tagging in the next workshop section.</p>
+<p>The third column displays a unique id of the image.  Just so that you know, we can refer to the image in our commands throughout the exercise by the full name as it's listed under <code>REPOSITORY</code>, the image id, or simply use the first 3 characters in the image id (e.g. <code>hello-world</code> could also be referenced by <code>48b5124b2768</code> or <code>48b</code>).  The thing is, the minimum is 3 characters, but if you have multiple images that have the same first 3 characters, you may need to use a couple of more until you reach a differentiator.</p>
+<p>The created column does not report when you downloaded the image locally.  Instead, it reports the date of when the image was created by its owner/designer.  This is a great column for DevOps to use when quickly trying to determine when a particular image was created.</p>
+<p>The size column reports the total size of the image - a sum of all layers comprised to make the image.</p>
+<h2 id="page_Docker-Repositories-Registries">Docker Repositories/Registries</h2>
+<p>A registry is a service - public or private - from which images can be hosted and pulled by other users.  Images are stored in these repositories under namespaces which are, typically, usernames or organizational names.</p>
+<p>In the above example, the <code>whalesay</code> image is located under the <code>docker</code> namespace.  This means that the image belongs to and is managed by the Docker organization.</p>
+<p>Microsoft's public registry is hosted by Docker.  You can visit Microsoft's registry at <a href="https://hub.docker.com/u/microsoft/" class="external">https://hub.docker.com/u/microsoft/</a>.  As you view the available images (which are only available for Windows-based machines), you'll see that each begin with <code>microsoft/</code>.  If we were to pull an image created and maintained by Microsoft into our local Docker instance, we would see the image prefaced by that namespace.</p>
+<h2 id="page_Inspecting-Images">Inspecting Images</h2>
+<p>There are a couple of ways we can get some greater details about our images.  We can view the underlying metadata of our image; and, we can see the build history of the image.</p>
+<h4 id="page_Image-Inspection-Metadata">Image Inspection (Metadata)</h4>
+<p>To view the metadata of an image, we'll need to <em>inspect</em> it.  From the command prompt, type the following:</p>
+<pre><code class="language-bash">docker image inspect docker/whalesay
+</code></pre>
+<p>You should see something that begins with the following:</p>
+<pre><code class="language-bash">[
+    {
+        &quot;Id&quot;: &quot;sha256:6b362a9f73eb8c33b48c95f4fcce1b6637fc25646728cf7fb0679b2da273c3f4&quot;,
+        &quot;RepoTags&quot;: [
+            &quot;docker/whalesay:latest&quot;
+        ],
+        &quot;RepoDigests&quot;: [
+            &quot;docker/whalesay@sha256:178598e51a26abbc958b8a2e48825c90bc22e641de3d31e18aaf55f3258ba93b&quot;
+        ],
+        &quot;Parent&quot;: &quot;&quot;,
+        &quot;Comment&quot;: &quot;&quot;,
+        &quot;Created&quot;: &quot;2015-05-25T22:04:23.303454458Z&quot;,
+        &quot;Container&quot;: &quot;5460b2353ce4e2b3e3e81b4a523a61c5adc238ae21d3ec3a5774674652e6317f&quot;,
+        &quot;ContainerConfig&quot;: {
+            &quot;Hostname&quot;: &quot;9ec8c01a6a48&quot;,
+            &quot;Domainname&quot;: &quot;&quot;,
+            &quot;User&quot;: &quot;&quot;,
+            &quot;AttachStdin&quot;: false,
+            &quot;AttachStdout&quot;: false,
+            &quot;AttachStderr&quot;: false,
+            &quot;Tty&quot;: false,
+            &quot;OpenStdin&quot;: false,
+            &quot;StdinOnce&quot;: false,
+            &quot;Env&quot;: [
+                &quot;PATH=/usr/local/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin&quot;
+            ],
+            &quot;Cmd&quot;: [
+                &quot;/bin/sh&quot;,
+                &quot;-c&quot;,
+                &quot;#(nop) ENV PATH=/usr/local/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin&quot;
+            ],
+            &quot;Image&quot;: &quot;5d5bd9951e26ca0301423625b19764bda914ae39c3f2bfd6f1824bf5354d10ee&quot;,
+            &quot;Volumes&quot;: null,
+            &quot;WorkingDir&quot;: &quot;/cowsay&quot;,
+            &quot;Entrypoint&quot;: null,
+            &quot;OnBuild&quot;: [],
+            &quot;Labels&quot;: {}
+        },
+        &quot;DockerVersion&quot;: &quot;1.6.0&quot;,
+        ...
+</code></pre>
+<p>Take a moment to examine the metadata. As you look through this information, you will find various attributes that describe the image.</p>
+<h4 id="page_Image-History">Image History</h4>
+<p>The last bit of information that the <code>inspect</code> command reported was a set of layers:</p>
+<pre><code class="language-bash">    &quot;Layers&quot;: [
+        &quot;sha256:1154ba695078d29ea6c4e1adb55c463959cd77509adf09710e2315827d66271a&quot;,
+        &quot;sha256:528c8710fd95f61d40b8bb8a549fa8dfa737d9b9c7c7b2ae55f745c972dddacd&quot;,
+        &quot;sha256:37ee47034d9b78f10f0c5ce3a25e6b6e58997fcadaf5f896c603a10c5f35fb31&quot;,
+        &quot;sha256:5f70bf18a086007016e948b04aed3b82103a36bea41755b6cddfaf10ace3c6ef&quot;,
+        &quot;sha256:b26122d57afa5c4a2dc8db3f986410805bc8792af3a4fa73cfde5eed0a8e5b6d&quot;,
+        &quot;sha256:091abc5148e4d32cecb5522067509d7ffc1e8ac272ff75d2775138639a6c50ca&quot;,
+        &quot;sha256:5f70bf18a086007016e948b04aed3b82103a36bea41755b6cddfaf10ace3c6ef&quot;,
+        &quot;sha256:d511ed9e12e17ab4bfc3e80ed7ce86d4aac82769b42f42b753a338ed9b8a566d&quot;,
+        &quot;sha256:d061ee1340ecc8d03ca25e6ca7f7502275f558764c1ab46bd1f37854c74c5b3f&quot;,
+        &quot;sha256:5f70bf18a086007016e948b04aed3b82103a36bea41755b6cddfaf10ace3c6ef&quot;
+    ]
+
+</code></pre>
+<p>Other than the layer id's, this doesn't really tell you much.  To see the actual build history of the image, type the following command:</p>
+<pre><code class="language-bash">docker image history docker/whalesay
+</code></pre>
+<p>You'll will then see something similar to the following:</p>
+<pre><code class="language-bash">IMAGE               CREATED             CREATED BY                                      SIZE                COMMENT
+6b362a9f73eb        2 years ago         /bin/sh -c #(nop) ENV PATH=/usr/local/bin:...   0B
+&lt;missing&gt;           2 years ago         /bin/sh -c sh install.sh                        30.4kB
+&lt;missing&gt;           2 years ago         /bin/sh -c git reset --hard origin/master       43.3kB
+&lt;missing&gt;           2 years ago         /bin/sh -c #(nop) WORKDIR /cowsay               0B
+&lt;missing&gt;           2 years ago         /bin/sh -c git clone https://github.com/mo...   89.9kB
+&lt;missing&gt;           2 years ago         /bin/sh -c apt-get -y update &amp;&amp; apt-get in...   58.6MB
+&lt;missing&gt;           2 years ago         /bin/sh -c #(nop) CMD [&quot;/bin/bash&quot;]             0B
+&lt;missing&gt;           2 years ago         /bin/sh -c sed -i 's/^#\s*\(deb.*universe\...   1.9kB
+&lt;missing&gt;           2 years ago         /bin/sh -c echo '#!/bin/sh' &gt; /usr/sbin/po...   195kB
+&lt;missing&gt;           2 years ago         /bin/sh -c #(nop) ADD file:f4d7b4b3402b5c5...   188MB
+</code></pre>
+<p>Keep in mind that these are <em>layers</em>.  So the way to read this is from bottom-up, meaning that the last row is actually the <em>first</em> layer.  Then, as you go up the list, additional layers are applied.  The bottom layer is usually a base image, such as an OS and, because it's the OS, is usually larger in size.  Then, actions or commands are applied to that image that make up the additional layers.  Some of the last actions to be applied to this image were running an install script and setting some environment variables.</p>
+<p>Let's take a look at another example.  Download another image to your local Docker engine by typing the following command:</p>
+<pre><code class="language-bash">docker image pull a11smiles/softcover
+</code></pre>
+<p>This is an image stored under my personal namespace in the public Docker registry.  Softcover is a ruby-based application used to build digital books for various platforms.  Running this command will take a few minutes, but, as you will observe, there's quite a few layers to this image.</p>
+<p>Once this image download and reconstruction has completed, check out the history of the image:</p>
+<pre><code class="language-bash">docker image history a11smiles/softcover
+</code></pre>
+<p>You will see all of the commands, which include installing multiple dependency libraries for Softcover (e.g. <code>apt-get install ...</code>), issued to build the image. Some of these dependencies are quite large, ranging from 815kB to almost 4GB.  Image the time it would require to download all of these requirements manually.  This doesn't include the time it would take to properly and consistently configure them for each developer and/or environment.  With the Softcover container, in this case, simply download the image and run the container with supplying your book's source to create a digital publication.  This can be easily wired up in an automated build process.</p>
+<h2 id="page_Listing-Containers">Listing Containers</h2>
+<p>Not only can we list our local images, but we can also list our local, instantiated containers.</p>
+<h4 id="page_Running-Containers">Running Containers</h4>
+<p>Type in the command line:</p>
+<pre><code class="language-bash">docker ps
+</code></pre>
+<p>You should see some like the following:</p>
+<pre><code class="language-bash">CONTAINER ID        IMAGE               COMMAND             CREATED             STATUS              PORTS               NAMES
+</code></pre>
+<p>This tells us that no containers are currently running.</p>
+<h4 id="page_Non-running-Containers">Non-running Containers</h4>
+<p>We can see previously ran containers by typing in the following:</p>
+<pre><code class="language-bash">docker ps -a
+</code></pre>
+<p>This will render a report similar to the following:</p>
+<pre><code class="language-bash">CONTAINER ID        IMAGE               COMMAND             CREATED             STATUS                    PORTS               NAMES
+a883ff18a967        docker/whalesay     &quot;cowsay Hola!&quot;      26 hours ago        Exited (0) 26 hours ago                       sad_goldstine
+baa0591c4392        hello-world         &quot;/hello&quot;            26 hours ago        Exited (0) 26 hours ago                       jovial_raman
+</code></pre>
+<p>You may see more depending on how many times you instantiated the <code>whalesay</code> image.  The important thing to see from this report is the <em>Status</em> of containers.  All containers, in this report, have exited and are no longer running.</p>
+<p>One thing to note is that even though the containers have finished executing, they have <strong>not</strong> been deleted.  This allows you to enter into a stopped container.  One reason this may be useful is if an application has thrown an exception and quit, you may want to enter into the container to check out some log files or something of that nature to debug the application.  Once you're done with the container, you must delete it.  We will see how to do this in the next page of the workshop.</p>
+<h2 id="page_Running-a-Container">Running a Container</h2>
+<p>We've already instantiated a couple of images.  We do this by the following command:</p>
+<pre><code class="language-bash">docker run &lt;namespace/image&gt;
+</code></pre>
+<p>There are two primary types of processes - short-running and long-running.</p>
+<h4 id="page_Short-running-Processes">Short-running Processes</h4>
+<p>Short-running process are just like the images we've already ran - <code>hello-world</code> and <code>whalesay</code>.  Another example is the <code>softcover</code> image.  A short-running process typically runs a single command, performing a single function, then exits.  This function could be displaying a message, sending an email, or building an application or other resource (e.g. a book, help documentation, etc).</p>
+<p>Every time we we run a short-running process, using the above command another container is instantiated.  This is why a new container was created ever time you ran <code>whalesay</code>.</p>
+<h4 id="page_Long-running-Processes">Long-running Processes</h4>
+<p>Long-running processes are typically service-based applications (e.g. web servers, service buses, queues, etc.).  We can also run an OS as a container.  Try typing in the following:</p>
+<pre><code class="language-bash">docker run -it centos /bin/bash
+</code></pre>
+<p>This command will will download an <code>centos</code> image and run the <code>bash</code> shell in <em>interactive</em> mode (<code>-i</code>) by opening up a <em>terminal</em> (<code>-t</code>).  When this runs, you will be automatically placed inside of the running CentOS container (notice the change in the command prompt (e.g. something similar to <code>root@&lt;container id&gt;:/#</code> )). If you are familiar with CentOS, feel free to take a look around. To exit the container, simply type in <code>exit</code>.  This will return you to your host machine.</p>
+<p>Let's now run CentOS in <em>detached</em> mode. Instantiating a container in interactive mode assumes we are going to interact with the running container.  However, typical long-running processes (like web servers) don't require command line interaction.  We'll run a web server later in this workshop.  However, for the moment, let's mimic a long-running process by running CentOS in an infinite sleep mode.  Execute the following command:</p>
+<pre><code class="language-bash">docker run -d centos sleep inf
+</code></pre>
+<p>Again, this will run a CentOS container in <em>detached</em> mode (<code>-d</code>) and set it to sleep infinitely.</p>
+<p>Let's see the container running in the background by typing in:</p>
+<pre><code class="language-bash">docker ps
+</code></pre>
+<p>You should see something like:</p>
+<pre><code class="language-bash">CONTAINER ID        IMAGE               COMMAND             CREATED             STATUS              PORTS               NAMES
+3fbc6b362e55        centos              &quot;sleep inf&quot;         2 seconds ago       Up 2 seconds                            loving_liskov
+</code></pre>
+<p>You'll see under the <em>Status</em> column, that it's reporting an up-time for the container. We don't typically run commands against long-running processes, but just for the practice, issue the following command (substitute the container id with your id):</p>
+<pre><code>docker exec 3fb ls
+</code></pre>
+<p>This will run a <code>list</code> command against the current directory <em>inside</em> of the container and return a list of subfolders.</p>
+<p>While the container is running, let's look at one more interesting thing. At the command prompt, type the following:</p>
+<pre><code class="language-bash">ps aux
+</code></pre>
+<p>This will list all of the currently running processes.  As you scroll and look at the background processes, you should see a line similar to the following. The process id, memory consumption, etc. may be different but try to find the last column.</p>
+<pre><code class="language-bash">root     55515  0.0  0.0   4380   664 ?        Ss   01:39   0:00 sleep inf
+</code></pre>
+<p>What you see here is that container processes are exposed to the host kernel and have access to host system resources.</p>
+<p>Now let's stop the container.  Technically, we could kill the process using traditional Linux (UNIX) commands, but this would leave our Docker engine in an unclean state and would require us to do some additional clean up.  Let's stop the container using Docker commands.</p>
+<pre><code class="language-bash">docker stop 3fb
+</code></pre>
+<p>(NOTE: Again, <code>3fb</code> is the first 3 characters of my container's id.  You'll need to use the id assigned to your container.)</p>
+<p>Running <code>docker ps</code> again should show you that no more containers are currently running.</p>
+<h4 id="page_Re-running-a-Stopped-Container">Re-running a Stopped Container</h4>
+<p>There will be times when you may need to re-run a stopped container. Find one of the stopped 'whalesay' containers by typing the following:</p>
+<pre><code class="language-bash">docker ps -a
+</code></pre>
+<p>My output looks like the following:</p>
+<pre><code class="language-bash">CONTAINER ID        IMAGE               COMMAND                  CREATED             STATUS                     PORTS               NAMES
+3fbc6b362e55        centos              &quot;sleep inf&quot;              2 minutes ago       Up 2 minutes                                   loving_liskov
+997f2f96a9dc        centos              &quot;/bin/bash&quot;              3 minutes ago       Exited (0) 3 minutes ago                       stupefied_curran
+521376937c77        docker/whalesay     &quot;cowsay 'Azure Roc...&quot;   4 minutes ago       Exited (0) 4 minutes ago                       frosty_kilby
+571f6e48e14c        hello-world         &quot;/hello&quot;                 5 minutes ago       Exited (0) 5 minutes ago                       pensive_rosalind
+</code></pre>
+<p>By typing the following command, I can re-run my <code>whalesay</code> container <em>without</em> instantiating a new container and without having to supply any parameters.  Basically, I can re-run the container as it was originally ran.</p>
+<pre><code class="language-bash">docker start -a 521
+</code></pre>
+<p>(NOTE: Again, <code>521</code> is the first 3 characters of the stopped <code>whalesay</code> container's id.)</p>
+<p>With this command, we are restarting a stopped container and attaching (<code>-a</code>) to the container's output (STDOUT/STDERR) to view any messages.  In our case, the message is a simple whale with a speech bubble.</p>
+<p>Wow, congratulations! You just successfully completed what may seem like a crash course in managing containers.  However, there's really not much more to it than this.  As with anything, the more you play with Docker, the more familiar and confident you become with it.</p>
+    </div>
+
+            <nav class="hidden-print">
+            <ul class="pager">
+                                    <li class=pager-prev><a href="../Courseware/Hello_World.html">Previous</a></li>
+                                                    <li class=pager-next><a href="../Courseware/Image_and_Container_Administration.html">Next</a></li>            </ul>
+        </nav>
+    </article>
+        </div>
+        <div class="col-md-2 hidden-print">
+            <div class="article-links" data-spy="affix" data-offset-top="100">
+                <strong>In this article</strong><ol><li><a href="#page_Overview">Overview</a></li><li><a href="#page_Listing-Images">Listing Images</a></li><li><a href="#page_Inspecting-Images">Inspecting Images</a></li><li><a href="#page_Listing-Containers">Listing Containers</a></li><li><a href="#page_Running-a-Container">Running a Container</a></li></ol>
+            </div>
+        </div>
+    </div>
+</div>
+
+    <div id="footer" class="container-fluid hidden-print">
+        <div class="row">
+            <div class="col-md-2 col-md-offset-1">
+            
+            </div>
+            <div class="col-md-8" style="text-align:right;">
+            This work is licensed under a Creative Commons Attribution 4.0 International License.
+            </div>
+        </div>
+    </div>
+    
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+
+    <!-- JS -->
+    
+    <script src="../themes/azure/js/highlight.pack.js"></script>
+    <script>hljs.initHighlightingOnLoad();</script>
+
+    <script src="../themes/azure/js/theme.js"></script>
+
+</body>
+</html>

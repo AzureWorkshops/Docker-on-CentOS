@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <title>Image and Container Administration - Docker on CentOS</title>
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+
+    <meta name="description" content="Azure Workshops" />
+    <meta name="author" content="Joshua Davis">
+    <link rel="icon" href="" type="image/x-icon">
+    
+    <!-- Font -->
+    
+    <!-- CSS -->
+    <link href='../themes/azure/css/vs.css' rel='stylesheet' type='text/css'><link href='../themes/azure/css/theme.css' rel='stylesheet' type='text/css'><link href='../themes/azure/css/theme-white.min.css' rel='stylesheet' type='text/css'>
+</head>
+<body class="">
+
+        <nav class="navbar navbar-inverse">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-md-2 col-md-offset-1">
+                    <div class="navbar-header">
+                        <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+                            <span class="sr-only">Toggle navigation</span>
+                            <span class="icon-bar"></span>
+                            <span class="icon-bar"></span>
+                            <span class="icon-bar"></span>
+                        </button>
+                        <a class="navbar-brand" href="/">Azure Workshops</a>
+                    </div>
+                </div>
+
+                <div class="col-md-8">
+                    <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                        <ul class="nav navbar-nav navbar-right">
+                            <!--
+                            <li><a href="about.html">About</a></li>
+                            <li><a href="contact.html">Contact</a></li>
+                            -->
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+<div id="content-wrapper" class="container-fluid">
+    <div class="row hidden-print">
+        <div class="col-md-10 col-md-offset-1 breadcrumbs">
+            <a href="../index.html">Docker on CentOS</a> / <a href="../Courseware/Exploring_Azure.html">Courseware</a> / <a href="../Courseware/Image_and_Container_Administration.html">Image and Container Administration</a>        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-2 col-md-offset-1 hidden-print">
+            <div data-spy="affix" data-offset-top="100">
+                <!-- Navigation -->
+                <ul class='Nav'><li class='Nav__item '><a href="../Overview.html">Overview</a></li><li class='Nav__item  has-children'><a href="#" class="aj-nav folder"><i class="Nav__arrow">&nbsp;</i>Getting Started</a><ul class='Nav'><li class='Nav__item '><a href="../Getting_Started/Requirements.html">Requirements</a></li><li class='Nav__item '><a href="../Getting_Started/Azure_Registration.html">Azure Registration</a></li></ul></li><li class='Nav__item Nav__item--open has-children'><a href="#" class="aj-nav folder"><i class="Nav__arrow">&nbsp;</i>Courseware</a><ul class='Nav'><li class='Nav__item '><a href="../Courseware/Exploring_Azure.html">Exploring Azure</a></li><li class='Nav__item '><a href="../Courseware/Create_a_Virtual_Machine.html">Create a Virtual Machine</a></li><li class='Nav__item '><a href="../Courseware/Install_Docker.html">Install Docker</a></li><li class='Nav__item '><a href="../Courseware/Hello_World.html">Hello World</a></li><li class='Nav__item '><a href="../Courseware/Working_With_Containers.html">Working With Containers</a></li><li class='Nav__item Nav__item--active'><a href="../Courseware/Image_and_Container_Administration.html">Image and Container Administration</a></li><li class='Nav__item '><a href="../Courseware/Exposing_Services_In_Azure.html">Exposing Services In Azure</a></li></ul></li></ul>
+                <div class="Links">
+                    
+                    <div class="pdf-link">
+                        <hr />
+                        <a href="../pdf/Docker on CentOS.pdf"><i class="fa fa-file-pdf-o" aria-hidden="true"></i> <span>Download PDF</span></a>
+                    </div>
+
+                                            <hr/>
+                        <div class="Twitter">
+                                                            <iframe allowtransparency="true" frameborder="0" scrolling="no" style="width:162px; height:20px;" src="https://platform.twitter.com/widgets/follow_button.html?screen_name=azureworkshops&amp;show_count=false"></iframe>
+                                <br />
+                                <br />
+                                                    </div>
+                                    </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <article class="Page">
+    <div class="pageHeader">
+        <h1>Image and Container Administration</h1>
+                    <div class="date"> Friday, August 4, 2017 2:16 PM</div>
+            </div>
+    <div class="copy">
+        <h2 id="page_Overview">Overview</h2>
+<p>You've just learned quite a bit in working with containers.  As a matter of fact, the majority of container management has already been covered.  We're now going to bring our knowledge of container and image management around full-circle.  This will complete the administration portion of the workshop.</p>
+<h2 id="page_Tagging-Images">Tagging Images</h2>
+<p>There will be instances, like DevOps for instance, where we will need to <em>tag</em> our images.  Tags allow us to apply labels to our images.  This is useful for tracking changes, such as in versioning, to our images.</p>
+<p>Let's create a simple derivative of the CentOS image we downloaded previously.</p>
+<p>Instantiate a new CentOS container by typing the following:</p>
+<pre><code class="language-bash">docker run -it centos /bin/bash
+</code></pre>
+<p>This will place you at the command prompt <em>inside</em> of the running container.  Now, let's interact with the OS by typing the following commands.</p>
+<pre><code class="language-bash">cd
+mkdir test
+cd test
+echo &quot;This is some sample text.&quot; &gt; test.txt
+exit
+</code></pre>
+<p>We've just created a new directory with a test text file in the user's home directory. If I view my available containers (<code>docker ps -a</code>), I'll find the id of the container I just exited from (look under the <em>Status</em> column for the container that was just exited). In my case (see the following output), the container's id is <code>493be7443224</code>.</p>
+<pre><code class="language-bash">CONTAINER ID        IMAGE               COMMAND                  CREATED             STATUS                          PORTS               NAMES
+493be7443224        centos              &quot;/bin/bash&quot;              33 seconds ago      Exited (0) 7 seconds ago                            elastic_golick
+521376937c77        docker/whalesay     &quot;cowsay 'Azure Roc...&quot;   6 minutes ago       Exited (0) About a minute ago                       frosty_kilby
+571f6e48e14c        hello-world         &quot;/hello&quot;                 8 minutes ago       Exited (0) 8 minutes ago                            pensive_rosalind
+</code></pre>
+<p>Let's restart the container and check to make sure our text file is still there (just to confirm). Again, replace the id below with your container's id.</p>
+<pre><code class="language-bash">docker start -i 493
+</code></pre>
+<p>At the prompt type in:</p>
+<pre><code class="language-bash">ls ~/test
+</code></pre>
+<p>This should list a file named <code>test.txt</code>.  Now, type <code>exit</code> to exit out of the container.</p>
+<p>We now have a customized container based on our CentOS image.  Let's create our own image with it's tag. We're also going to add a message and an author to the image's metadata. Once again, replace the <code>493</code> below with the id of your stopped container.</p>
+<pre><code class="language-bash">docker commit -m &quot;added test.txt&quot; -a &quot;Some User&quot; 493 mynamespace/testtext:v1
+</code></pre>
+<p>With this command, again, I'm added a message (<code>-m</code>) to describe the image and an author (<code>-a</code>) to inform of the author.  The <code>493</code> is the first 3 characters of my stopped, modified container.  Finally, I've supplied a namespace (<code>mynamespace/</code>), an image name (<code>testtext</code>), and a tag (<code>v1</code>).</p>
+<p>The namespace is optional, but a good practice to differentiate between images that might have the same name.  For example, if you and another developer are working on two separate images and you have them both locally, it's easier to keep track of who's image belongs to who.</p>
+<p>Now execute the following command:</p>
+<pre><code class="language-bash">docker images
+</code></pre>
+<p>You should see something similar to the following:</p>
+<pre><code class="language-bash">REPOSITORY             TAG                 IMAGE ID            CREATED             SIZE
+mynamespace/testtext   v1                  9be308086de4        16 minutes ago      193 MB
+centos                 latest              3bee3060bfc8        12 hours ago        193 MB
+a11smiles/softcover    latest              306f23683872        3 months ago        5.74 GB
+hello-world            latest              48b5124b2768        4 months ago        1.84 kB
+docker/whalesay        latest              6b362a9f73eb        2 years ago         247 MB
+</code></pre>
+<p>Notice that you now have your custom image with its tag. Also, because our text file isn't very large, our image has, virtually, the same size as that of the <code>centos</code> image (118MB).</p>
+<p>We can then instantiate a container based on our image by running the following:</p>
+<pre><code class="language-bash">docker run -it mynamespace/testtext:v1 /bin/bash
+</code></pre>
+<p>(NOTE: In all the previous times we've run this command, we've never had to specify a tag because the <code>latest</code> tag is implied.  In our case, the tag we used is <code>v1</code> so we have to specify it.)</p>
+<p>This will place us, once again, inside the container.  Run the following command in the container:</p>
+<pre><code class="language-bash">cat ~/test/test.txt
+</code></pre>
+<p>This will show the contents of the file we added earlier.</p>
+<p>Now we can exit out of the container by simply typing in <code>exit</code>.</p>
+<p>In the host machine, typing in <code>docker ps -a</code> shows us that our custom image instantiated a container which just exited successfully.</p>
+<pre><code class="language-bash">CONTAINER ID        IMAGE                     COMMAND                  CREATED             STATUS                      PORTS               NAMES
+3f539f11af56        mynamespace/testtext:v1   &quot;/bin/bash&quot;              36 seconds ago      Exited (0) 24 seconds ago                       angry_jang
+c70646beb7c2        centos                    &quot;sleep inf&quot;              2 minutes ago       Up 2 minutes                                    fervent_swirles
+493be7443224        centos                    &quot;/bin/bash&quot;              21 minutes ago      Exited (0) 19 minutes ago                       elastic_golick
+521376937c77        docker/whalesay           &quot;cowsay 'Azure Roc...&quot;   27 minutes ago      Exited (0) 22 minutes ago                       frosty_kilby
+571f6e48e14c        hello-world               &quot;/hello&quot;                 29 minutes ago      Exited (0) 29 minutes ago                       pensive_rosalind
+</code></pre>
+<p>Finally, if we inspect our custom image (<code>docker image inspect mynamespace/testtext:v1</code>), we will see the comment and author attributes displaying &quot;added test.txt&quot; and &quot;Some User&quot;, respectively. And, the top layer of our history (<code>docker image history mynamespace/testtext:v1</code>) shows us entering into the <code>bash</code> shell.</p>
+<h2 id="page_Deleting-Containers">Deleting Containers</h2>
+<p>We can clean up disk space by removing unused containers and images.  However, we cannot remove any images that currently have dependent containers - even containers that have stopped.  Therefore, we must delete dependent containers first.</p>
+<p>For our example, let's suppose that we no longer need the <code>centos</code> container anymore because we've customized it (e.g. added our own text file).  We can delete the <code>centos</code> container by typing the following:</p>
+<pre><code class="language-bash">docker rm 493
+</code></pre>
+<p>Let's also delete our <code>hello-world</code> container:</p>
+<pre><code class="language-bash">docker rm 571
+</code></pre>
+<p>Remember, for the previous two commands, substitute your respective container ids.</p>
+<h2 id="page_Deleting-Images">Deleting Images</h2>
+<p>Deleting images are just as easy.  First, let's refresh ourselves on our locally installed images. Running <code>docker images</code> produces the following output:</p>
+<pre><code class="language-bash">REPOSITORY             TAG                 IMAGE ID            CREATED             SIZE
+mynamespace/testtext   v1                  9be308086de4        22 minutes ago      193 MB
+centos                 latest              3bee3060bfc8        12 hours ago        193 MB
+a11smiles/softcover    latest              306f23683872        3 months ago        5.74 GB
+hello-world            latest              48b5124b2768        4 months ago        1.84 kB
+docker/whalesay        latest              6b362a9f73eb        2 years ago         247 MB
+</code></pre>
+<p>Since images, combined with their namespaces and tags, are unique on the local Docker engine, we can delete images by using the full namespace reference (including the tag) or by using the image id.  Let's practice deleting images.</p>
+<p>First, let's delete the <code>hello-world</code> image:</p>
+<pre><code class="language-bash">docker rmi hello-world
+</code></pre>
+<p>As a reminder, the <code>latest</code> tag is implied.  If we were to delete our custom image, we would be required to supply the tag because it differs from <code>latest</code>.</p>
+<p>Running the <code>docker rmi</code> command will remove any links between the image and shared layers.  If the layer is no longer required by any other image, the layer is also deleted.</p>
+<p>Now, let's attempt to delete the <code>centos</code> image:</p>
+<pre><code class="language-bash">docker rmi centos
+</code></pre>
+<p>Running this command produces and error - namely, that the image cannot be deleted because there's still a container that depends on it. Running <code>docker ps -a</code> shows that this, indeed, is the case (the second container listed below):</p>
+<pre><code class="language-bash">CONTAINER ID        IMAGE                     COMMAND                  CREATED             STATUS                      PORTS               NAMES
+3f539f11af56        mynamespace/testtext:v1   &quot;/bin/bash&quot;              3 minutes ago       Exited (0) 3 minutes ago                        angry_jang
+c70646beb7c2        centos                    &quot;sleep inf&quot;              5 minutes ago       Up 5 minutes                                    fervent_swirles
+521376937c77        docker/whalesay           &quot;cowsay 'Azure Roc...&quot;   30 minutes ago      Exited (0) 25 minutes ago                       frosty_kilby
+</code></pre>
+<p>One of the many reasons for this, is to protect against accidental deletion of our containers and images.  However, if are sure we want to delete the image and all its containers, we can <em>force</em> a deletion:</p>
+<pre><code class="language-bash">docker rmi -f centos
+</code></pre>
+<p>Besides forcing a delete of the image, notice how the output is different from the previous deletion of the <code>hello-world</code> image.  In this last case, only the reference, or link, was removed from the image.  The underlying layers weren't <em>deleted</em>.  Why?  Because the custom image that we created earlier still depends on the underlying CentOS OS layer(s).  This is one way Docker helps to conserve disk space - shared and reuse of dependencies. Deleting our custom image (and containers) would perform an actual delete of the CentOS OS layer(s).</p>
+    </div>
+
+            <nav class="hidden-print">
+            <ul class="pager">
+                                    <li class=pager-prev><a href="../Courseware/Working_With_Containers.html">Previous</a></li>
+                                                    <li class=pager-next><a href="../Courseware/Exposing_Services_In_Azure.html">Next</a></li>            </ul>
+        </nav>
+    </article>
+        </div>
+        <div class="col-md-2 hidden-print">
+            <div class="article-links" data-spy="affix" data-offset-top="100">
+                <strong>In this article</strong><ol><li><a href="#page_Overview">Overview</a></li><li><a href="#page_Tagging-Images">Tagging Images</a></li><li><a href="#page_Deleting-Containers">Deleting Containers</a></li><li><a href="#page_Deleting-Images">Deleting Images</a></li></ol>
+            </div>
+        </div>
+    </div>
+</div>
+
+    <div id="footer" class="container-fluid hidden-print">
+        <div class="row">
+            <div class="col-md-2 col-md-offset-1">
+            
+            </div>
+            <div class="col-md-8" style="text-align:right;">
+            This work is licensed under a Creative Commons Attribution 4.0 International License.
+            </div>
+        </div>
+    </div>
+    
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+
+    <!-- JS -->
+    
+    <script src="../themes/azure/js/highlight.pack.js"></script>
+    <script>hljs.initHighlightingOnLoad();</script>
+
+    <script src="../themes/azure/js/theme.js"></script>
+
+</body>
+</html>

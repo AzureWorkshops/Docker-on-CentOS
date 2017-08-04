@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <title>Install Docker - Docker on CentOS</title>
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+
+    <meta name="description" content="Azure Workshops" />
+    <meta name="author" content="Joshua Davis">
+    <link rel="icon" href="" type="image/x-icon">
+    
+    <!-- Font -->
+    
+    <!-- CSS -->
+    <link href='../themes/azure/css/vs.css' rel='stylesheet' type='text/css'><link href='../themes/azure/css/theme.css' rel='stylesheet' type='text/css'><link href='../themes/azure/css/theme-white.min.css' rel='stylesheet' type='text/css'>
+</head>
+<body class="">
+
+        <nav class="navbar navbar-inverse">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-md-2 col-md-offset-1">
+                    <div class="navbar-header">
+                        <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+                            <span class="sr-only">Toggle navigation</span>
+                            <span class="icon-bar"></span>
+                            <span class="icon-bar"></span>
+                            <span class="icon-bar"></span>
+                        </button>
+                        <a class="navbar-brand" href="/">Azure Workshops</a>
+                    </div>
+                </div>
+
+                <div class="col-md-8">
+                    <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                        <ul class="nav navbar-nav navbar-right">
+                            <!--
+                            <li><a href="about.html">About</a></li>
+                            <li><a href="contact.html">Contact</a></li>
+                            -->
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+<div id="content-wrapper" class="container-fluid">
+    <div class="row hidden-print">
+        <div class="col-md-10 col-md-offset-1 breadcrumbs">
+            <a href="../index.html">Docker on CentOS</a> / <a href="../Courseware/Exploring_Azure.html">Courseware</a> / <a href="../Courseware/Install_Docker.html">Install Docker</a>        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-2 col-md-offset-1 hidden-print">
+            <div data-spy="affix" data-offset-top="100">
+                <!-- Navigation -->
+                <ul class='Nav'><li class='Nav__item '><a href="../Overview.html">Overview</a></li><li class='Nav__item  has-children'><a href="#" class="aj-nav folder"><i class="Nav__arrow">&nbsp;</i>Getting Started</a><ul class='Nav'><li class='Nav__item '><a href="../Getting_Started/Requirements.html">Requirements</a></li><li class='Nav__item '><a href="../Getting_Started/Azure_Registration.html">Azure Registration</a></li></ul></li><li class='Nav__item Nav__item--open has-children'><a href="#" class="aj-nav folder"><i class="Nav__arrow">&nbsp;</i>Courseware</a><ul class='Nav'><li class='Nav__item '><a href="../Courseware/Exploring_Azure.html">Exploring Azure</a></li><li class='Nav__item '><a href="../Courseware/Create_a_Virtual_Machine.html">Create a Virtual Machine</a></li><li class='Nav__item Nav__item--active'><a href="../Courseware/Install_Docker.html">Install Docker</a></li><li class='Nav__item '><a href="../Courseware/Hello_World.html">Hello World</a></li><li class='Nav__item '><a href="../Courseware/Working_With_Containers.html">Working With Containers</a></li><li class='Nav__item '><a href="../Courseware/Image_and_Container_Administration.html">Image and Container Administration</a></li><li class='Nav__item '><a href="../Courseware/Exposing_Services_In_Azure.html">Exposing Services In Azure</a></li></ul></li></ul>
+                <div class="Links">
+                    
+                    <div class="pdf-link">
+                        <hr />
+                        <a href="../pdf/Docker on CentOS.pdf"><i class="fa fa-file-pdf-o" aria-hidden="true"></i> <span>Download PDF</span></a>
+                    </div>
+
+                                            <hr/>
+                        <div class="Twitter">
+                                                            <iframe allowtransparency="true" frameborder="0" scrolling="no" style="width:162px; height:20px;" src="https://platform.twitter.com/widgets/follow_button.html?screen_name=azureworkshops&amp;show_count=false"></iframe>
+                                <br />
+                                <br />
+                                                    </div>
+                                    </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <article class="Page">
+    <div class="pageHeader">
+        <h1>Install Docker</h1>
+                    <div class="date"> Friday, August 4, 2017 2:16 PM</div>
+            </div>
+    <div class="copy">
+        <h2 id="page_Overview">Overview</h2>
+<p>We have just created our CentOS server.  We now need to apply any available system updates along with installing and configuring Docker to begin working with containers.</p>
+<h2 id="page_Install-Updates">Install Updates</h2>
+<p>Just like any other operating system, updates are periodically released to support new features and patch any potential security threats.  We will apply the updates first.</p>
+<ol>
+<li>
+<p>If you have not already, connect to your remote CentOS server and login.</p>
+</li>
+<li>
+<p>From the command prompt, type the following to automatically install all available updates:</p>
+</li>
+</ol>
+<pre><code class="language-bash">sudo yum update -y
+</code></pre>
+<ol start="3">
+<li>
+<p>You'll be required to re-enter your password.</p>
+</li>
+<li>
+<p>Depending on the number and size of available updates, this process may take a few minutes.  Now would be a good time to take a break.</p>
+</li>
+</ol>
+<h2 id="page_Install-Docker">Install Docker</h2>
+<p>We now have an updated CentOS operating system.  We are ready to install Docker.</p>
+<ol>
+<li>First, let's remove any remnants of older versions of Docker to ensure that we run the latest version. From the command prompt, type the following:</li>
+</ol>
+<pre><code class="language-bash">sudo yum remove docker docker-common container-selinux docker-selinux docker-engine
+</code></pre>
+<div class="bs-callout bs-callout-primary"><h4>Cut &amp; Paste</h4>You can paste this into PuTTY by <em>right-clicking</em> the terminal screen.</div>
+
+<ol start="2">
+<li>We need to install dependencies for Docker:</li>
+</ol>
+<pre><code class="language-bash">sudo yum install -y yum-utils device-mapper-persistent-data lvm2
+</code></pre>
+<ol start="3">
+<li>Now, we need to tell CentOS <em>where</em> the Docker repository is located. From the command prompt, type (or paste) the following:</li>
+</ol>
+<pre><code class="language-bash">sudo yum-config-manager --add-repo https://download.docker.com/linux/centos/docker-ce.repo
+</code></pre>
+<ol start="4">
+<li>Now that the new repository has been added, we need to update the <code>yum</code> package index:</li>
+</ol>
+<pre><code class="language-bash">sudo yum makecache fast
+</code></pre>
+<ol start="5">
+<li>We need to query for the latest version of Docker available in the repository:</li>
+</ol>
+<pre><code class="language-bash">yum list docker-ce.x86_64  --showduplicates |sort -r
+</code></pre>
+<ol start="6">
+<li>You should see outputed list <em>similar</em> to the following:</li>
+</ol>
+<pre><code class="language-bash">docker-ce.x86_64            17.03.1.ce-1.el7.centos             docker-ce-stable
+docker-ce.x86_64            17.03.0.ce-1.el7.centos             docker-ce-stable
+</code></pre>
+<ol start="7">
+<li>The latest version of Docker will be the top line.  The version we want is listed in the middle column. In this case it's <code>17.03.1.ce-1.el7.centos</code>. To install, run the following command replacing <code>&lt;VERSION&gt;</code> with the version listed in the center column.</li>
+</ol>
+<pre><code class="language-bash">sudo yum install -y docker-ce-&lt;VERSION&gt;
+</code></pre>
+<ol start="8">
+<li>
+<p>Installing the Docker engine may take an additional minute or two.</p>
+</li>
+<li>
+<p>Map the storage device for Docker to use. We'll need to temporarily promote ourselves to the highest user permission level.</p>
+</li>
+</ol>
+<pre><code class="language-bash">sudo bash
+mkdir /etc/docker
+echo '{ &quot;storage-driver&quot;: &quot;devicemapper&quot; }' &gt; /etc/docker/daemon.json
+exit
+</code></pre>
+<ol start="10">
+<li>Finally, start Docker:</li>
+</ol>
+<pre><code class="language-bash">sudo systemctl start docker
+</code></pre>
+<h2 id="page_Additional-Configuration">Additional Configuration</h2>
+<p>To simplify running and managing Docker, there's some additional configuration that we need to implement.  While this section is optional, it is recommended to make managing Docker much easier.</p>
+<h4 id="page_Ensure-Docker-Engine-is-Running">Ensure Docker Engine is Running</h4>
+<ol>
+<li>From the command prompt, type:</li>
+</ol>
+<pre><code class="language-bash">sudo systemctl status docker
+</code></pre>
+<ol start="2">
+<li>You should see something similar to the following:</li>
+</ol>
+<pre><code class="language-bash">● docker.service - Docker Application Container Engine
+   Loaded: loaded (/lib/systemd/system/docker.service; enabled; vendor preset: enabled)
+   Active: active (running) since Sun 2017-06-04 22:38:16 UTC; 4min 10s ago
+     Docs: https://docs.docker.com
+ Main PID: 32844 (dockerd)
+</code></pre>
+<ol start="3">
+<li>Because the service is running, we can now use the <code>docker</code> command later in this workshop.</li>
+</ol>
+<h4 id="page_Enable-Docker-Engine-at-Startup">Enable Docker Engine at Startup</h4>
+<p>Let's make sure the Docker engine is configured to run on system startup (and reboot).</p>
+<ol>
+<li>From the command prompt, type:</li>
+</ol>
+<pre><code class="language-bash">sudo systemctl enable docker
+</code></pre>
+<ol start="2">
+<li>You should see something similar to the following:</li>
+</ol>
+<pre><code class="language-bash">Created symlink from /etc/systemd/system/multi-user.target.wants/docker.service to /usr/lib/systemd/system/docker.service.
+</code></pre>
+<h4 id="page_Elevate-Your-Privileges">Elevate Your Privileges</h4>
+<p>Be default, running the <code>docker</code> command requires root privileges - that is, you have to prefix the command with <code>sudo</code>. It can also be run by a user in the <strong>docker</strong> group, which is automatically created during the install of Docker.  If you attempt to run the <code>docker</code> command without prefixing it with <code>sudo</code> or without being in the docker group, you'll get an output like the following:</p>
+<pre><code class="language-bash">docker: Cannot connect to the Docker daemon. Is the docker daemon running on this host?.
+See 'docker run --help'.
+</code></pre>
+<p>To avoid typing <code>sudo</code> whenever you run the <code>docker</code> command, add your username to the docker group:</p>
+<pre><code class="language-bash">sudo usermod -aG docker $(whoami)
+</code></pre>
+<p>You will then need to log out and back in for the changes to take effect.</p>
+<p>If you need to add another user to the <code>docker</code> group (one in which you have not logged in as currently), simply provide that username explicitly in the command:</p>
+<pre><code class="language-bash">sudo usermod -aG docker &lt;username&gt;
+</code></pre>
+<p>You've successfully installed the Docker engine.  You have also configured it to run at startup and have added yourself to the <strong>Docker</strong> group so that you have sufficient privileges for running Docker.</p>
+    </div>
+
+            <nav class="hidden-print">
+            <ul class="pager">
+                                    <li class=pager-prev><a href="../Courseware/Create_a_Virtual_Machine.html">Previous</a></li>
+                                                    <li class=pager-next><a href="../Courseware/Hello_World.html">Next</a></li>            </ul>
+        </nav>
+    </article>
+        </div>
+        <div class="col-md-2 hidden-print">
+            <div class="article-links" data-spy="affix" data-offset-top="100">
+                <strong>In this article</strong><ol><li><a href="#page_Overview">Overview</a></li><li><a href="#page_Install-Updates">Install Updates</a></li><li><a href="#page_Install-Docker">Install Docker</a></li><li><a href="#page_Additional-Configuration">Additional Configuration</a></li></ol>
+            </div>
+        </div>
+    </div>
+</div>
+
+    <div id="footer" class="container-fluid hidden-print">
+        <div class="row">
+            <div class="col-md-2 col-md-offset-1">
+            
+            </div>
+            <div class="col-md-8" style="text-align:right;">
+            This work is licensed under a Creative Commons Attribution 4.0 International License.
+            </div>
+        </div>
+    </div>
+    
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+
+    <!-- JS -->
+    
+    <script src="../themes/azure/js/highlight.pack.js"></script>
+    <script>hljs.initHighlightingOnLoad();</script>
+
+    <script src="../themes/azure/js/theme.js"></script>
+
+</body>
+</html>

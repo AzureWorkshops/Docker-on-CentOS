@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <title>Exposing Services In Azure - Docker on CentOS</title>
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+
+    <meta name="description" content="Azure Workshops" />
+    <meta name="author" content="Joshua Davis">
+    <link rel="icon" href="" type="image/x-icon">
+    
+    <!-- Font -->
+    
+    <!-- CSS -->
+    <link href='../themes/azure/css/vs.css' rel='stylesheet' type='text/css'><link href='../themes/azure/css/theme.css' rel='stylesheet' type='text/css'><link href='../themes/azure/css/theme-white.min.css' rel='stylesheet' type='text/css'>
+</head>
+<body class="">
+
+        <nav class="navbar navbar-inverse">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-md-2 col-md-offset-1">
+                    <div class="navbar-header">
+                        <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+                            <span class="sr-only">Toggle navigation</span>
+                            <span class="icon-bar"></span>
+                            <span class="icon-bar"></span>
+                            <span class="icon-bar"></span>
+                        </button>
+                        <a class="navbar-brand" href="/">Azure Workshops</a>
+                    </div>
+                </div>
+
+                <div class="col-md-8">
+                    <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                        <ul class="nav navbar-nav navbar-right">
+                            <!--
+                            <li><a href="about.html">About</a></li>
+                            <li><a href="contact.html">Contact</a></li>
+                            -->
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+<div id="content-wrapper" class="container-fluid">
+    <div class="row hidden-print">
+        <div class="col-md-10 col-md-offset-1 breadcrumbs">
+            <a href="../index.html">Docker on CentOS</a> / <a href="../Courseware/Exploring_Azure.html">Courseware</a> / <a href="../Courseware/Exposing_Services_In_Azure.html">Exposing Services In Azure</a>        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-2 col-md-offset-1 hidden-print">
+            <div data-spy="affix" data-offset-top="100">
+                <!-- Navigation -->
+                <ul class='Nav'><li class='Nav__item '><a href="../Overview.html">Overview</a></li><li class='Nav__item  has-children'><a href="#" class="aj-nav folder"><i class="Nav__arrow">&nbsp;</i>Getting Started</a><ul class='Nav'><li class='Nav__item '><a href="../Getting_Started/Requirements.html">Requirements</a></li><li class='Nav__item '><a href="../Getting_Started/Azure_Registration.html">Azure Registration</a></li></ul></li><li class='Nav__item Nav__item--open has-children'><a href="#" class="aj-nav folder"><i class="Nav__arrow">&nbsp;</i>Courseware</a><ul class='Nav'><li class='Nav__item '><a href="../Courseware/Exploring_Azure.html">Exploring Azure</a></li><li class='Nav__item '><a href="../Courseware/Create_a_Virtual_Machine.html">Create a Virtual Machine</a></li><li class='Nav__item '><a href="../Courseware/Install_Docker.html">Install Docker</a></li><li class='Nav__item '><a href="../Courseware/Hello_World.html">Hello World</a></li><li class='Nav__item '><a href="../Courseware/Working_With_Containers.html">Working With Containers</a></li><li class='Nav__item '><a href="../Courseware/Image_and_Container_Administration.html">Image and Container Administration</a></li><li class='Nav__item Nav__item--active'><a href="../Courseware/Exposing_Services_In_Azure.html">Exposing Services In Azure</a></li></ul></li></ul>
+                <div class="Links">
+                    
+                    <div class="pdf-link">
+                        <hr />
+                        <a href="../pdf/Docker on CentOS.pdf"><i class="fa fa-file-pdf-o" aria-hidden="true"></i> <span>Download PDF</span></a>
+                    </div>
+
+                                            <hr/>
+                        <div class="Twitter">
+                                                            <iframe allowtransparency="true" frameborder="0" scrolling="no" style="width:162px; height:20px;" src="https://platform.twitter.com/widgets/follow_button.html?screen_name=azureworkshops&amp;show_count=false"></iframe>
+                                <br />
+                                <br />
+                                                    </div>
+                                    </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <article class="Page">
+    <div class="pageHeader">
+        <h1>Exposing Services In Azure</h1>
+                    <div class="date"> Friday, August 4, 2017 2:16 PM</div>
+            </div>
+    <div class="copy">
+        <h2 id="page_Overview">Overview</h2>
+<p>The final part of this workshop is to practice exposing a container service outside of Azure. We're going to create a simple web server and access it from our local machine.</p>
+<h2 id="page_NGINX">NGINX</h2>
+<p>We are going to deploy a container hosting NGINX (pronounced &quot;engine X&quot;), a simple, but powerful web server. NGINX is typically used in containerized deployments because it supports autoscaling, service discovery and other capabilities often leveraged in microservice architecture.</p>
+<p>Run NGINX by typing the following command:</p>
+<pre><code class="language-bash">docker run -d -p 8080:80 nginx
+</code></pre>
+<p>This will download and run NGINX in the background.  As stated earlier in this workshop, we often run services in <em>detached</em> mode (<code>-d</code>).  As new parameter that you see here is mapping, or publishing (<code>-p</code>), ports  - very similar to a NAT, if you are familiar with the concept. There are two ports specified here separated by a colon.  The first number is the host's port while the second number is the container's port.  So, in essence, we are mapping the host's port 8080 to the container's port 80.  If our container runs multiple services or a service requiring multiple ports, we can also specify a port range.  We could have used the default HTTP port 80 for the host, but for the workshop I chose port 8080 for differentiation between the two environments in pursuit of clarity.</p>
+<p>Let's make sure that NGINX is running successfully.</p>
+<pre><code class="language-bash">curl http://localhost:8080
+</code></pre>
+<p>Running the previous command, should display some html source code.</p>
+<pre><code class="language-bash">&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+&lt;head&gt;
+&lt;title&gt;Welcome to nginx!&lt;/title&gt;
+&lt;style&gt;
+    body {
+        width: 35em;
+        margin: 0 auto;
+        font-family: Tahoma, Verdana, Arial, sans-serif;
+    }
+&lt;/style&gt;
+&lt;/head&gt;
+&lt;body&gt;
+&lt;h1&gt;Welcome to nginx!&lt;/h1&gt;
+&lt;p&gt;If you see this page, the nginx web server is successfully installed and
+working. Further configuration is required.&lt;/p&gt;
+
+&lt;p&gt;For online documentation and support please refer to
+&lt;a href=&quot;http://nginx.org/&quot;&gt;nginx.org&lt;/a&gt;.&lt;br/&gt;
+Commercial support is available at
+&lt;a href=&quot;http://nginx.com/&quot;&gt;nginx.com&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;&lt;em&gt;Thank you for using nginx.&lt;/em&gt;&lt;/p&gt;
+&lt;/body&gt;
+&lt;/html&gt;
+</code></pre>
+<h2 id="page_Network-Security-Group-NSG">Network Security Group (NSG)</h2>
+<p>Now that our web server is running, let's make it available outside of Azure.</p>
+<p>When we created our CentOS virtual machine, we accepted the defaults, including the default settings for our NSG.  The default settings only allowed SSH (port 22) access. We need to add a rule to our NSG to allow HTTP traffic over port 8080.</p>
+<ol>
+<li>
+<p>If you are not still there, go back to the Azure portal and navigate to the settings of your CentOS virtual machine.</p>
+</li>
+<li>
+<p>In the left menu, click on <strong>Network interfaces</strong> <img src="https://raw.githubusercontent.com/AzureWorkshops/images/master/icons_network_interfaces.jpg" class="inline"/>.</p>
+</li>
+<li>
+<p>This will open the <em>Network Interfaces</em> blade for your CentOS virtual machine. Click on the singular, listed interface.</p>
+</li>
+<li>
+<p>In the left menu, click on <strong>Network security group</strong> <img src="https://raw.githubusercontent.com/AzureWorkshops/images/master/icons_network_security_group.jpg" class="inline"/>.</p>
+</li>
+<li>
+<p>This will list the currently active NSG.  In our case, it should be the NSG that was created with our virtual machine - <strong>docker-centos-nsg</strong>.  Click on the NSG (<strong>NOTE:</strong> Click on the actual NSG link, <strong>NOT</strong> on <strong>Edit</strong>).</p>
+</li>
+<li>
+<p>In the left menu, click on <strong>Inbound security roles</strong> <img src="https://raw.githubusercontent.com/AzureWorkshops/images/master/icons_inbound_security_rules.jpg" class="inline"/>.</p>
+</li>
+<li>
+<p>At the top of the blade, click <strong>Add</strong> <img src="https://raw.githubusercontent.com/AzureWorkshops/images/master/icons_add.jpg" class="inline"/>.</p>
+</li>
+<li>
+<p>Enter the following configuration:</p>
+<ul>
+<li>Name: <strong>allow-http</strong>
+</li>
+<li>Priority: <strong>1010</strong>
+</li>
+<li>Source: <strong>Any</strong>
+</li>
+<li>Service: <strong>Custom</strong>
+</li>
+<li>Protocol: <strong>Any</strong>
+</li>
+<li>Port range: <strong>8080</strong>
+</li>
+<li>Action: <strong>Allow</strong>
+</li>
+</ul>
+</li>
+<li>
+<p>Click <strong>OK</strong>.</p>
+</li>
+</ol>
+<p>This should only take a couple of seconds.  Once you see the rule added, open a new browser and navigate to the IP address of your CentOS virtual machine, including the port number.  The IP address used in this workshop's screen shots is <strong>52.170.85.112</strong> (your IP address will be different).  Using the aforementioned IP address, I would direct my browser to <strong>http://52.170.85.112:8080</strong>.  Doing so, you should see the NGINX landing page.</p>
+    </div>
+
+            <nav class="hidden-print">
+            <ul class="pager">
+                                    <li class=pager-prev><a href="../Courseware/Image_and_Container_Administration.html">Previous</a></li>
+                                            </ul>
+        </nav>
+    </article>
+        </div>
+        <div class="col-md-2 hidden-print">
+            <div class="article-links" data-spy="affix" data-offset-top="100">
+                <strong>In this article</strong><ol><li><a href="#page_Overview">Overview</a></li><li><a href="#page_NGINX">NGINX</a></li></ol>
+            </div>
+        </div>
+    </div>
+</div>
+
+    <div id="footer" class="container-fluid hidden-print">
+        <div class="row">
+            <div class="col-md-2 col-md-offset-1">
+            
+            </div>
+            <div class="col-md-8" style="text-align:right;">
+            This work is licensed under a Creative Commons Attribution 4.0 International License.
+            </div>
+        </div>
+    </div>
+    
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+
+    <!-- JS -->
+    
+    <script src="../themes/azure/js/highlight.pack.js"></script>
+    <script>hljs.initHighlightingOnLoad();</script>
+
+    <script src="../themes/azure/js/theme.js"></script>
+
+</body>
+</html>
