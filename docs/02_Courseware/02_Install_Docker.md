@@ -21,7 +21,7 @@ We now have an updated CentOS operating system.  We are ready to install Docker.
   ```bash
   sudo yum remove docker docker-common container-selinux docker-selinux docker-engine
   ```  
-  > NOTE: You can paste this into PuTTY by _right-clicking_ the terminal screen.
+!!<h4>Cut &amp; Paste</h4>You can paste this into PuTTY by <em>right-clicking</em> the terminal screen.
 
   2. We need to install dependencies for Docker:
   ```bash
